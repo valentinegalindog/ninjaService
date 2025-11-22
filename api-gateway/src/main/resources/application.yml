@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: ninja-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/ninjas/**
+          filters:
+            - RewritePath=/api/ninjas/(?<segment>.*), /ninjas/$\{segment}

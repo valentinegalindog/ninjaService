@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ninja_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  discovery-server:
+    build: ./discovery-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - postgres
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discovery-server
+
+  ninja-service:
+    build: ./ninja-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - discovery-server
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ninja_db
+
+volumes:
+  postgres_data:
