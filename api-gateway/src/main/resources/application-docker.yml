@@ -8,10 +8,10 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: false
+          enabled: false  # Deshabilitar Eureka
       routes:
         - id: ninja-service
-          uri: http://localhost:8081
+          uri: http://ninja-service:8081  # Conexión DIRECTA al contenedor
           predicates:
             - Path=/api/ninjas/**
           filters:
